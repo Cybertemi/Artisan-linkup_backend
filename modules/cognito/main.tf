@@ -3,8 +3,8 @@ resource "aws_cognito_user_pool" "congito_end_user_userpool" {
   name                       = "${var.RESOURCE_PREFIX}-userpool"
   alias_attributes           = ["preferred_username"]
   auto_verified_attributes   = ["email"]
-  mfa_configuration          = "OPTIONAL"
-  sms_authentication_message = "m4ace ${var.RESOURCE_PREFIX} verification code is {####}"
+  mfa_configuration          = "ON"
+  sms_authentication_message = "artisan-linkup ${var.RESOURCE_PREFIX} verification code is {####}"
 
   password_policy {
     minimum_length                   = 8
@@ -22,11 +22,11 @@ resource "aws_cognito_user_pool" "congito_end_user_userpool" {
 
   verification_message_template {
     default_email_option  = "CONFIRM_WITH_CODE"
-    email_message         = "Hello {custom:first_name}, Welcome, your journey starts here! Your Verification Code is: {####} If you need any assistance please contact us at support@m4ace.com. We are here to assist. Regards, m4ace Team"
-    email_message_by_link = "Hello,<br/><br/>You organisation account owner has created a ${var.RESOURCE_PREFIX} account for you on the <b>OAF</b> platform.<br/><br/>Please click the link below to verify your email address on the platform. {##Verify Email##}<br/><br/> You will receive a separate email address with your login details<br/><br/>Welcome to m4ace<br/><br/>"
-    email_subject         = "[m4ace] Registration Email Verification"
-    email_subject_by_link = "Welcome to m4ace"
-    sms_message           = "Your m4ace ${var.RESOURCE_PREFIX} reset password code is {####}"
+    email_message         = "Hello {custom:first_name}, Your Verification Code is: {####} Feel free to reach out to our support team on fullpotentialinternational@gmail.com for further asistance. We are more than willing to assist you. Regards, Artisan-Linkup"
+    email_message_by_link = "Hello,<br/><br/>You organisation account owner has created a ${var.RESOURCE_PREFIX} account for you on the <b>OAF</b> platform.<br/><br/>Please click the link below to verify your email address {##Verify Email##}<br/><br/> You will receive a separate email address with your login details<br/><br/>Welcome to Artisan-Linkup!<br/><br/>"
+    email_subject         = "[artisan-linkup] Registration Email Verification"
+    email_subject_by_link = "Welcome to Artisan-Linkup"
+    sms_message           = "Your Artisan-Linkup ${var.RESOURCE_PREFIX} reset password code is {####}"
   }
 
   username_configuration {
@@ -48,12 +48,12 @@ resource "aws_cognito_user_pool" "congito_end_user_userpool" {
       priority = 1
     }
   }
-  lambda_config {
-    custom_message                 = aws_lambda_function.custom_message.arn
-    create_auth_challenge          = aws_lambda_function.create_custom_auth.arn
-    define_auth_challenge          = aws_lambda_function.define_custom_auth.arn
-    verify_auth_challenge_response = aws_lambda_function.verify_custom_auth.arn
-  }
+  # lambda_config {
+  #   custom_message                 = aws_lambda_function.custom_message.arn
+  #   create_auth_challenge          = aws_lambda_function.create_custom_auth.arn
+  #   define_auth_challenge          = aws_lambda_function.define_custom_auth.arn
+  #   verify_auth_challenge_response = aws_lambda_function.verify_custom_auth.arn
+  # }
   sms_configuration {
     external_id    = var.IAM_COGNITO_ASSUMABLE_ROLE_EXTERNAL_ID
     sns_caller_arn = aws_iam_role.cognito_sms_role.arn
@@ -63,18 +63,30 @@ resource "aws_cognito_user_pool" "congito_end_user_userpool" {
   #   email_sending_account = "DEVELOPER"
   #   # source_arn            = "arn:aws:ses:${var.AWS_REGION}:${var.CURRENT_ACCOUNT_ID}:identity/${var.EMAIL_SENDER}"
   # }
-
+# Standard AWS attributes (Users)
   schema {
-    name                     = "org_name"
+    name                     = "name"
     attribute_data_type      = "String"
     developer_only_attribute = false
     mutable                  = true  # false for "sub"
-    required                 = false # true for "sub"
+    required                 = true # true for "sub"
     string_attribute_constraints {
-      min_length = 0
-      max_length = 2048
+      min_length = 1
+      max_length = 256
     }
   }
+  schema {
+    name                     = "email"
+    attribute_data_type      = "String"
+    developer_only_attribute = false
+    mutable                  = true  # false for "sub"
+    required                 = true # true for "sub"
+    string_attribute_constraints {
+      min_length = 5
+      max_length = 256
+    }
+  }
+
   schema {
     name                     = "role"
     attribute_data_type      = "String"
@@ -82,41 +94,12 @@ resource "aws_cognito_user_pool" "congito_end_user_userpool" {
     mutable                  = true  # false for "sub"
     required                 = false # true for "sub"
     string_attribute_constraints {
-      min_length = 0
-      max_length = 2048
-    }
-  }
-  schema {
-    name                     = "first_name"
-    attribute_data_type      = "String"
-    developer_only_attribute = false
-    mutable                  = true  # false for "sub"
-    required                 = false # true for "sub"
-    string_attribute_constraints {
-      min_length = 0
-      max_length = 2048
+      min_length = 1
+      max_length = 150
     }
   }
 
-  schema {
-    name                     = "email"
-    attribute_data_type      = "String"
-    developer_only_attribute = false
-    mutable                  = true  # false for "sub"
-    required                 = false # true for "sub"
-    string_attribute_constraints {
-      min_length = 0
-      max_length = 2048
-    }
-  }
 
-  schema {
-    name                     = "completed_setup"
-    attribute_data_type      = "Boolean"
-    developer_only_attribute = false
-    mutable                  = true  # false for "sub"
-    required                 = false # true for "sub"
-  }
 
   tags = var.COMMON_TAGS
 }
@@ -153,122 +136,118 @@ resource "aws_cognito_user_pool_client" "cognito_client_end_user" {
 }
 
 
+
 resource "aws_iam_policy" "sms_policy" {
-  name   = "${var.ENV}-m4ace-${var.RESOURCE_PREFIX}-sms_policy-core"
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-          "sns:*"
-      ],
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
-}
-EOF
+  name   = "${var.ENV}-${var.RESOURCE_PREFIX}-sms_policy-core"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action   = ["sns:*"]
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
 }
 
+
 resource "aws_iam_role" "cognito_sms_role" {
-  name               = "${var.ENV}-${var.RESOURCE_PREFIX}-m4ace-sms-role"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": ["cognito-idp.amazonaws.com"]
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
+  name               = "${var.ENV}-${var.RESOURCE_PREFIX}-artisan-linkup-sms-role"
+  assume_role_policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Action    = "sts:AssumeRole"
+        Principal = { Service = "cognito-idp.amazonaws.com" }
+        Effect    = "Allow"
+        Sid       = ""
+      }
+    ]
+  })
+  tags = var.COMMON_TAGS
 }
-EOF
-  tags               = var.COMMON_TAGS
-}
+
+
+
 resource "aws_iam_role_policy_attachment" "policy_role_attachment" {
   role       = aws_iam_role.cognito_sms_role.id
   policy_arn = aws_iam_policy.sms_policy.arn
 }
+resource "aws_cognito_identity_pool" "main" {
+  identity_pool_name               = "${var.RESOURCE_PREFIX}-${var.RESOURCE}-identity-pool"
+  allow_unauthenticated_identities = false
+}
 
 resource "aws_iam_role" "group_role" {
-  name = "${var.ENV}-${var.RESOURCE_PREFIX}-m4ace-group-role"
+  name = "${var.ENV}-${var.RESOURCE_PREFIX}-artisan-linkup-group-role"
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Principal": {
-        "Federated": "cognito-identity.amazonaws.com"
-      },
-      "Action": "sts:AssumeRoleWithWebIdentity",
-      "Condition": {
-        "StringEquals": {
-          "cognito-identity.amazonaws.com:aud": "us-east-1:12345678-dead-beef-cafe-123456790ab"
-        },
-        "ForAnyValue:StringLike": {
-          "cognito-identity.amazonaws.com:amr": "authenticated"
+  assume_role_policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Sid    = ""
+        Effect = "Allow"
+        Principal = {
+          Federated = "cognito-identity.amazonaws.com"
+        }
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Condition = {
+          StringEquals = {
+            "cognito-identity.amazonaws.com:aud" = aws_cognito_identity_pool.main.id
+          }
+          "ForAnyValue:StringLike" = {
+            "cognito-identity.amazonaws.com:amr" = "authenticated"
+          }
         }
       }
-    }
-  ]
+    ]
+  })
+
+  tags = var.COMMON_TAGS
 }
-EOF
-}
-
-
-
+  
+  
 resource "aws_cognito_user_group" "cognito-user-groups" {
-  description  = "user group managed by cloud@m4ace.com with terraform"
+  description  = "user group managed by cloud@artisan-linkup.com with terraform"
   name         = var.COGNITO_GROUP_LIST
   user_pool_id = aws_cognito_user_pool.congito_end_user_userpool.id
 }
 
+resource "aws_iam_role" "artisan_linkup_lambda_iam" {
+  name = "${var.ENV}-${var.RESOURCE_PREFIX}-artisan-linkup-lambda-iam"
 
-resource "aws_iam_role" "m4ace_lambda_iam" {
-  name = "${var.ENV}-m4ace-lambda-${var.RESOURCE_PREFIX}-role"
+  assume_role_policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-  tags               = var.COMMON_TAGS
+  tags = var.COMMON_TAGS
 }
 
 
-resource "aws_iam_role_policy" "m4ace_lambda_role_policy" {
-  name = "${var.ENV}-m4ace-${var.RESOURCE_PREFIX}-lambda-policy"
-  role = aws_iam_role.m4ace_lambda_iam.id
+resource "aws_iam_role_policy" "artisan_linkup_lambda_role_policy" {
+  name = "${var.ENV}-artisan-linkup-${var.RESOURCE_PREFIX}-lambda-policy"
+  role = aws_iam_role.artisan_linkup_lambda_iam.id
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "*",
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
-}
-EOF
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Action   = "*"
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
 }
 
 resource "aws_lambda_permission" "customSignUpMessage" {
@@ -293,10 +272,16 @@ resource "aws_lambda_layer_version" "request_layer" {
   description              = "requests layer"
 }
 
+
+resource "aws_iam_role_policy_attachment" "artisan-linkup_lambda_basic_execution" {
+  role       = aws_iam_role.artisan_linkup_lambda_iam.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
 resource "aws_lambda_function" "custom_message" {
   filename      = "${path.module}/code/zip/customSignUpMessage.zip"
   function_name = "${var.RESOURCE_PREFIX}_custom_message_lambda_function"
-  role          = aws_iam_role.m4ace_lambda_iam.arn
+  role          = aws_iam_role.artisan_linkup_lambda_iam.arn
   handler       = "customSignUpMessage.lambda_handler"
   runtime       = var.PYTHON_LAMBDA_VERSION
   timeout       = 60
@@ -320,44 +305,44 @@ data "archive_file" "lambda_function" {
 
 ######### DEFINE CUSTOM AUTH LAMBDA  #############################
 
-resource "aws_iam_role" "m4ace_define_custom_auth_lambda_iam" {
-  name = "${var.RESOURCE_PREFIX}-${var.RESOURCE}-define-cusutom-auth-role"
+resource "aws_iam_role" "artisan_linkup_define_custom_auth_lambda_iam" {
+  name = "${var.RESOURCE_PREFIX}-${var.RESOURCE}-define-custom-auth-role"
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-  tags               = var.COMMON_TAGS
-}
+  assume_role_policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
 
-resource "aws_iam_role_policy" "m4ace_lambda_define_custom_auth_role_policy" {
-  name = "${var.RESOURCE_PREFIX}-define-cusutom-auth-lambda-policy"
-  role = aws_iam_role.m4ace_define_custom_auth_lambda_iam.id
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "*",
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
-}
-EOF
+  tags = var.COMMON_TAGS
 }
 
+resource "aws_iam_role_policy" "artisan_linkup_lambda_define_custom_auth_role_policy" {
+  name = "${var.RESOURCE_PREFIX}-define-custom-auth-lambda-policy"
+  role = aws_iam_role.artisan_linkup_define_custom_auth_lambda_iam.id
+
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Action   = "*"
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+
+
+  
 resource "aws_lambda_permission" "defineCustomAuth" {
   statement_id  = "AllowExecutionFromCognito"
   action        = "lambda:InvokeFunction"
@@ -372,7 +357,7 @@ resource "aws_lambda_permission" "defineCustomAuth" {
 resource "aws_lambda_function" "define_custom_auth" {
   filename      = "${path.module}/code/zip/defineAuthChallenge.zip"
   function_name = "${var.RESOURCE_PREFIX}_define_custom_auth_lambda_function"
-  role          = aws_iam_role.m4ace_lambda_iam.arn
+  role          = aws_iam_role.artisan_linkup_lambda_iam.arn
   handler       = "defineAuthChallenge.lambda_handler"
   runtime       = var.PYTHON_LAMBDA_VERSION
   memory_size   = 3008
@@ -395,43 +380,42 @@ data "archive_file" "define_auth_challenge_lambda_function" {
 
 
 ######### CREATE CUSTOM AUTH LAMBDA  #############################
-resource "aws_iam_role" "m4ace_create_custom_auth_lambda_iam" {
-  name = "${var.RESOURCE_PREFIX}-${var.RESOURCE}-create-cusutom-auth-role"
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-  tags               = var.COMMON_TAGS
+resource "aws_iam_role" "artisan_linkup_create_custom_auth_lambda_iam" {
+  name = "${var.RESOURCE_PREFIX}-${var.RESOURCE}-create-custom-auth-role"
+
+  assume_role_policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = var.COMMON_TAGS
 }
 
-resource "aws_iam_role_policy" "m4ace_lambda_create_custom_auth_role_policy" {
-  name = "${var.RESOURCE_PREFIX}-create-cusutom-auth-lambda-policy"
-  role = aws_iam_role.m4ace_create_custom_auth_lambda_iam.id
+resource "aws_iam_role_policy" "artisan_linkup_lambda_create_custom_auth_role_policy" {
+  name = "${var.RESOURCE_PREFIX}-create-custom-auth-lambda-policy"
+  role = aws_iam_role.artisan_linkup_create_custom_auth_lambda_iam.id
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "*",
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Action   = "*"
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
 }
-EOF
-}
+
 
 resource "aws_lambda_permission" "createCustomAuth" {
   statement_id  = "AllowExecutionFromCognito"
@@ -447,7 +431,7 @@ resource "aws_lambda_permission" "createCustomAuth" {
 resource "aws_lambda_function" "create_custom_auth" {
   filename      = "${path.module}/code/zip/createAuthChallenge.zip"
   function_name = "${var.RESOURCE_PREFIX}_create_custom_auth_lambda_function"
-  role          = aws_iam_role.m4ace_lambda_iam.arn
+  role          = aws_iam_role.artisan_linkup_lambda_iam.arn
   handler       = "createAuthChallenge.lambda_handler"
   runtime       = var.PYTHON_LAMBDA_VERSION
   memory_size   = 3008
@@ -469,43 +453,43 @@ data "archive_file" "create_auth_challenge_lambda_function" {
 }
 
 ######### VERIFY CUSTOM AUTH LAMBDA  #############################
-resource "aws_iam_role" "m4ace_verify_custom_auth_lambda_iam" {
-  name = "${var.RESOURCE_PREFIX}-${var.RESOURCE}-verify-cusutom-auth-role"
 
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
-}
-EOF
-  tags               = var.COMMON_TAGS
+resource "aws_iam_role" "artisan_linkup_verify_custom_auth_lambda_iam" {
+  name = "${var.RESOURCE_PREFIX}-${var.RESOURCE}-verify-custom-auth-role"
+
+  assume_role_policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = var.COMMON_TAGS
 }
 
-resource "aws_iam_role_policy" "m4ace_lambda_verify_custom_auth_role_policy" {
-  name = "${var.RESOURCE_PREFIX}-verify-cusutom-auth-lambda-policy"
-  role = aws_iam_role.m4ace_verify_custom_auth_lambda_iam.id
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "*",
-      "Effect": "Allow",
-      "Resource": "*"
-    }
-  ]
+resource "aws_iam_role_policy" "artisan_linkup_lambda_verify_custom_auth_role_policy" {
+  name = "${var.RESOURCE_PREFIX}-verify-custom-auth-lambda-policy"
+  role = aws_iam_role.artisan_linkup_verify_custom_auth_lambda_iam.id
+
+  policy = jsonencode({
+    Version   = "2012-10-17"
+    Statement = [
+      {
+        Action   = "*"
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
 }
-EOF
-}
+
 
 resource "aws_lambda_permission" "verifyCustomAuth" {
   statement_id  = "AllowExecutionFromCognito"
@@ -521,7 +505,7 @@ resource "aws_lambda_permission" "verifyCustomAuth" {
 resource "aws_lambda_function" "verify_custom_auth" {
   filename      = "${path.module}/code/zip/verifyAuthChallenge.zip"
   function_name = "${var.RESOURCE_PREFIX}_verify_custom_auth_lambda_function"
-  role          = aws_iam_role.m4ace_lambda_iam.arn
+  role          = aws_iam_role.artisan_linkup_lambda_iam.arn
   handler       = "verifyAuthChallenge.lambda_handler"
   runtime       = var.PYTHON_LAMBDA_VERSION
   memory_size   = 3008

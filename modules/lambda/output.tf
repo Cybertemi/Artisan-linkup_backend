@@ -1,49 +1,41 @@
 # =================================================================
-#  SIGNUP
+#  NAME
 # =================================================================
-output "LAMBDA_SIGN_UP_FUNCTION_ARN" {
-  value = aws_lambda_function.signup_function.arn
+output "LAMBDA_NAME_FUNCTION_ARN" {
+  value = aws_lambda_function.name_function.arn
 }
-output "LAMBDA_SIGN_UP_FUNCTION_NAME" {
-  value = aws_lambda_function.signup_function.function_name
-}
-
-# =================================================================
-#  FORGOT_PASSWORD
-# =================================================================
-output "LAMBDA_FORGOT_PASSWORD_FUNCTION_ARN" {
-  value = aws_lambda_function.forgot_password_function.arn
-}
-output "LAMBDA_FORGOT_PASSWORD_FUNCTION_NAME" {
-  value = aws_lambda_function.forgot_password_function.function_name
+output "LAMBDA_NAME_FUNCTION_NAME" {
+  value = aws_lambda_function.name_function.function_name
 }
 
 # =================================================================
-#  CONFIRM SIGNUP
+#  EMAIL
 # =================================================================
-output "LAMBDA_CONFIRM_SIGN_UP_FUNCTION_ARN" {
-  value = aws_lambda_function.confirm_signup_function.arn
+output "LAMBDA_EMAIL_FUNCTION_ARN" {
+  value = aws_lambda_function.email_function.arn
 }
-output "LAMBDA_CONFIRM_SIGN_UP_FUNCTION_NAME" {
-  value = aws_lambda_function.confirm_signup_function.function_name
-}
-
-# =================================================================
-#  CONFIRM FORGOT PASSWORD
-# =================================================================
-output "LAMBDA_CONFIRM_FORGOT_PASSWORD_FUNCTION_ARN" {
-  value = aws_lambda_function.confirm_forgot_password_function.arn
-}
-output "LAMBDA_CONFIRM_FORGOT_PASSWORD_FUNCTION_NAME" {
-  value = aws_lambda_function.confirm_forgot_password_function.function_name
+output "LAMBDA_EMAIL_FUNCTION_NAME" {
+  value = aws_lambda_function.email_function.function_name
 }
 
+
 # =================================================================
-#  LOGIN SIGNUP
+#  ROLE
 # =================================================================
-output "LAMBDA_LOGIN_FUNCTION_ARN" {
-  value = aws_lambda_function.login_function.arn
+output "LAMBDA_ROLE_FUNCTION_ARN" {
+  value = aws_lambda_function.role_function.arn
 }
-output "LAMBDA_LOGIN_FUNCTION_NAME" {
-  value = aws_lambda_function.login_function.function_name
+output "LAMBDA_ROLE_FUNCTION_NAME" {
+  value = aws_lambda_function.role_function.function_name
+}
+
+
+# =================================================================
+# MFA_SETUP
+# =================================================================
+output "LAMBDA_MFA_SETUP_FUNCTION_ARN" {
+  value = aws_lambda_function.mfa_setup_function.arn
+}
+output "LAMBDA_MFA_SETUP_FUNCTION_NAME" {
+  value = aws_lambda_function.mfa_setup_function.function_name
 }

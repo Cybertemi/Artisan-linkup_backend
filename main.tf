@@ -1,7 +1,7 @@
 
 
 locals {
-  RESOURCES_PREFIX = "${lower(var.ENV)}-farmers-connect"
+  RESOURCES_PREFIX = "${lower(var.ENV)}-artisan-linkup"
   ACCOUNTID        = data.aws_caller_identity.current.account_id
   INFO_EMAIL       = "info@email.com"
 
@@ -10,7 +10,7 @@ locals {
   cognito_domain_name = var.WEBAPP_DNS
   common_tags = {
     environment = var.ENV
-    project     = "m4ace"
+    project     = "artisan-linkup"
     managedby   = "cloud@email.com"
   }
 }
@@ -22,21 +22,25 @@ module "roles" {
   AWS_REGION       = var.region
   RESOURCES_PREFIX = local.RESOURCES_PREFIX
 
+
 }
 
 # POlicy
-module "policy" {
-  source                                     = "./modules/policy"
-  ENV                                        = var.ENV
-  AWS_REGION                                 = var.region
-  RESOURCES_PREFIX                           = local.RESOURCES_PREFIX
-  CURRENT_ACCOUNT_ID                         = data.aws_caller_identity.current.account_id
-  SIGN_UP_FUNCTION_ROLE_NAME                 = module.roles.SIGN_UP_FUNCTION_ROLE_NAME
-  FORGOT_PASSWORD_FUNCTION_ROLE_NAME         = module.roles.FORGOT_PASSWORD_FUNCTION_ROLE_NAME 
-  CONFIRM_FORGOT_PASSWORD_FUNCTION_ROLE_NAME = module.roles.CONFIRM_FORGOT_PASSWORD_FUNCTION_ROLE_NAME
-  LOGIN_FUNCTION_ROLE_NAME                   = module.roles.LOGIN_FUNCTION_ROLE_NAME 
-  CONFIRM_SIGN_UP_FUNCTION_ROLE_NAME         = module.roles.CONFIRM_SIGN_UP_FUNCTION_ROLE_NAME
-}
+ module "policy" {
+   source                                     = "./modules/policy"
+   ENV                                        = var.ENV
+   AWS_REGION                                 = var.region
+   RESOURCES_PREFIX                           = local.RESOURCES_PREFIX
+   CURRENT_ACCOUNT_ID                         = data.aws_caller_identity.current.account_id
+   NAME_FUNCTION_ROLE_NAME                    = module.roles.NAME_FUNCTION_ROLE_NAME
+   EMAIL_FUNCTION_ROLE_NAME                   = module.roles.EMAIL_FUNCTION_ROLE_NAME 
+   ROLE_FUNCTION_ROLE_NAME                    = module.roles.ROLE_FUNCTION_ROLE_NAME
+   MFA_SETUP_FUNCTION_ROLE_NAME               = module.roles.MFA_SETUP_FUNCTION_ROLE_NAME
+
+
+   
+  
+ }
 
 
 # Lambda
@@ -53,11 +57,10 @@ module "lambda" {
 
   LAMBDA_JAVASCRIPT_VERSION                 = var.LAMBDA_JAVASCRIPT_VERSION
   LAMBDA_PYTHON_VERSION                     = var.LAMBDA_PYTHON_VERSION
-  SIGN_UP_FUNCTION_ROLE_ARN                 = module.roles.SIGN_UP_FUNCTION_ROLE_ARN
-  FORGOT_PASSWORD_FUNCTION_ROLE_ARN         = module.roles.FORGOT_PASSWORD_FUNCTION_ROLE_ARN
-CONFIRM_FORGOT_PASSWORD_FUNCTION_ROLE_ARN   = module.roles.CONFIRM_FORGOT_PASSWORD_FUNCTION_ROLE_ARN
-CONFIRM_SIGN_UP_FUNCTION_ROLE_ARN           = module.roles.CONFIRM_SIGN_UP_FUNCTION_ROLE_ARN
-LOGIN_FUNCTION_ROLE_ARN                     = module.roles.LOGIN_FUNCTION_ROLE_ARN
+  NAME_FUNCTION_ROLE_ARN                    = module.roles.NAME_FUNCTION_ROLE_ARN
+  EMAIL_FUNCTION_ROLE_ARN         = module.roles.EMAIL_FUNCTION_ROLE_ARN
+  ROLE_FUNCTION_ROLE_ARN                    = module.roles.ROLE_FUNCTION_ROLE_ARN
+  MFA_SETUP_FUNCTION_ROLE_ARN               = module.roles.MFA_SETUP_FUNCTION_ROLE_ARN
 
   # ================================== CORE FUNCTIONS=================================     
 }
@@ -98,18 +101,18 @@ module "open" {
   RESOURCES_PREFIX                            = local.RESOURCES_PREFIX
   CURRENT_ACCOUNT_ID                          = data.aws_caller_identity.current.account_id
   API_DOMAIN_NAME                             = local.DOMAIN_NAME
-  LAMBDA_SIGN_UP_FUNCTION_ARN                 = module.lambda.LAMBDA_SIGN_UP_FUNCTION_ARN
-  LAMBDA_CONFIRM_SIGN_UP_FUNCTION_ARN         = module.lambda.LAMBDA_CONFIRM_SIGN_UP_FUNCTION_ARN
-  LAMBDA_CONFIRM_FORGOT_PASSWORD_FUNCTION_ARN = module.lambda.LAMBDA_CONFIRM_FORGOT_PASSWORD_FUNCTION_ARN
-  LAMBDA_LOGIN_FUNCTION_ARN                   = module.lambda.LAMBDA_LOGIN_FUNCTION_ARN
-  LAMBDA_FORGOT_PASSWORD_FUNCTION_ARN = module.lambda.LAMBDA_FORGOT_PASSWORD_FUNCTION_ARN
+  LAMBDA_NAME_FUNCTION_ARN                    = module.lambda.LAMBDA_NAME_FUNCTION_ARN
+  LAMBDA_EMAIL_FUNCTION_ARN                   = module.lambda.LAMBDA_EMAIL_FUNCTION_ARN
+  LAMBDA_ROLE_FUNCTION_ARN                    = module.lambda.LAMBDA_ROLE_FUNCTION_ARN
+  LAMBDA_MFA_SETUP_FUNCTION_ARN               = module.lambda.LAMBDA_MFA_SETUP_FUNCTION_ARN
+  
 
   LAMBDA_NAMES = [
-    module.lambda.LAMBDA_SIGN_UP_FUNCTION_NAME,
-    module.lambda.LAMBDA_FORGOT_PASSWORD_FUNCTION_NAME,
-    module.lambda.LAMBDA_CONFIRM_FORGOT_PASSWORD_FUNCTION_NAME,
-    module.lambda.LAMBDA_CONFIRM_SIGN_UP_FUNCTION_NAME,
-    module.lambda.LAMBDA_LOGIN_FUNCTION_NAME
+    module.lambda.LAMBDA_NAME_FUNCTION_NAME,
+    module.lambda.LAMBDA_EMAIL_FUNCTION_NAME,
+    module.lambda.LAMBDA_ROLE_FUNCTION_NAME,
+    module.lambda.LAMBDA_MFA_SETUP_FUNCTION_NAME,
+  
   ]
 }
 
@@ -120,7 +123,7 @@ module "cognito_end_user" {
   COMMON_TAGS                            = local.common_tags
   EMAIL_SENDER                           = local.INFO_EMAIL
   IAM_COGNITO_ASSUMABLE_ROLE_EXTERNAL_ID = var.IAM_COGNITO_ASSUMABLE_ROLE_EXTERNAL_ID
-  AWS_REGION                             = data.aws_region.current.name
+  AWS_REGION                             = data.aws_region.current.id
   CURRENT_ACCOUNT_ID                     = local.ACCOUNTID
   WEBAPP_DNS                             = var.WEBAPP_DNS
   COGNITO_GROUP_LIST                     = var.COGNITO_GROUP_LIST

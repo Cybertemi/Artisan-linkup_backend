@@ -1,8 +1,8 @@
 # =================================================================
-#  SIGNUP ROLE
+#  NAME ROLE
 # =================================================================
-resource "aws_iam_role" "sign_up_function_role" {
-  name = "SIGN_UP_FUNCTION_${var.RESOURCES_PREFIX}"
+resource "aws_iam_role" "name_function_role" {
+  name = "NAME_FUNCTION_${var.RESOURCES_PREFIX}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -19,10 +19,10 @@ resource "aws_iam_role" "sign_up_function_role" {
 }
 
 # =================================================================
-#  Forgot_password ROLE
+#  Email ROLE
 # =================================================================
-resource "aws_iam_role" "forgot_password_function_role" {
-  name = "Forgot_password_FUNCTION_${var.RESOURCES_PREFIX}"
+resource "aws_iam_role" "email_function_role" {
+  name = "EMAIL_FUNCTION_${var.RESOURCES_PREFIX}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -39,10 +39,10 @@ resource "aws_iam_role" "forgot_password_function_role" {
 }
 
 # =================================================================
-#  CONFIRM SIGNUP ROLE
+#  ROLE
 # =================================================================
-resource "aws_iam_role" "confirm_sign_up_function_role" {
-  name = "CONFIRM_SIGN_UP_FUNCTION_${var.RESOURCES_PREFIX}"
+resource "aws_iam_role" "role_function_role" {
+  name = "ROLE_FUNCTION_${var.RESOURCES_PREFIX}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -61,8 +61,8 @@ resource "aws_iam_role" "confirm_sign_up_function_role" {
 # =================================================================
 #  CONFIRM FORGOT PASSWORD ROLE
 # =================================================================
-resource "aws_iam_role" "confirm_forgot_password_function_role" {
-  name = "CONFIRM_FORGOT_PASSWORD_FUNCTION_${var.RESOURCES_PREFIX}"
+resource "aws_iam_role" "mfa_setup_function_role" {
+  name = "MFA_SETUP_FUNCTION_${var.RESOURCES_PREFIX}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -78,24 +78,3 @@ resource "aws_iam_role" "confirm_forgot_password_function_role" {
   })
 }
 
-
-# =================================================================
-#  LOGIN ROLE
-# =================================================================
-resource "aws_iam_role" "login_function_role" {
-  name = "LOGIN_FUNCTION_${var.RESOURCES_PREFIX}"
-
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
-}

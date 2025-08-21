@@ -1,8 +1,8 @@
-resource "aws_s3_bucket" "m4ace" {
+resource "aws_s3_bucket" "artisan-linkup" {
   bucket = var.bucket_name
 
   tags = {
-    Name = "m4ace-${var.environment}-bucket"
+    Name = "Artisan-linkup-${var.environment}-bucket"
   }
 
   lifecycle {
@@ -11,14 +11,14 @@ resource "aws_s3_bucket" "m4ace" {
 }
 
 resource "aws_s3_bucket_versioning" "versioning_example" {
-  bucket = aws_s3_bucket.m4ace.id
+  bucket = aws_s3_bucket.artisan-linkup.id
   versioning_configuration {
     status = "Enabled"
   }
 }
 
-resource "aws_s3_bucket_public_access_block" "m4ace-public_access" {
-  bucket                  = aws_s3_bucket.m4ace.id
+resource "aws_s3_bucket_public_access_block" "artisan-linkup-public_access" {
+  bucket                  = aws_s3_bucket.artisan-linkup.id
   block_public_acls       = true
   block_public_policy     = false # Disable blocking public policies
   ignore_public_acls      = true
@@ -26,7 +26,7 @@ resource "aws_s3_bucket_public_access_block" "m4ace-public_access" {
 }
 
 # resource "aws_s3_bucket_policy" "bucket_policy" {
-#   bucket = aws_s3_bucket.m4ace.id
+#   bucket = aws_s3_bucket.artisan-linkup.id
 #   policy = jsonencode({
 #     "Version" : "2012-10-17",
 #     "Statement" : [

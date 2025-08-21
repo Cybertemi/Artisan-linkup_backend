@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
     version: '2022-08-17T21:20:52Z'
-    title: 'core'
+    title: 'artisan-linkup API'
 basePath: '/${basePath}'
 schemes:
     - 'https'
@@ -55,7 +55,7 @@ paths:
                             type: 'string'
             x-amazon-apigateway-integration:
                 httpMethod: 'POST'
-                uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/${LAMBDA_CREATE_LINK_FUNCTION_ARN}/invocations'
+                uri: 'arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/${LAMBDA_CREATE_LINK_FUNCTION_ARN}/invocations'
                 responses:
                     default:
                         statusCode: '200'
@@ -140,7 +140,7 @@ paths:
                             type: 'string'
             x-amazon-apigateway-integration:
                 httpMethod: 'POST'
-                uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/${LAMBDA_CREATE_LINK_FUNCTION_ARN}/invocations'
+                uri: 'arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/${LAMBDA_CREATE_LINK_FUNCTION_ARN}/invocations'
                 responses:
                     default:
                         statusCode: '200'

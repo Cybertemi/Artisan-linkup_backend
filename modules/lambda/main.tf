@@ -67,14 +67,15 @@ O   O  P      E      N  NN
 
 
 # =================================================================
-# Create a Lambda function for signup
+# Create a Lambda function for name function
 # =========================================================================
-resource "aws_lambda_function" "signup_function" {
-  filename         = "${path.module}/codes/zip/signup.zip"
-  function_name    = "${var.RESOURCES_PREFIX}-signup-${local.LAMBDA_VERSION}"
-  role             = var.SIGN_UP_FUNCTION_ROLE_ARN
-  handler          = "signup.lambda_handler"
-  source_code_hash = data.archive_file.lambda_signup_archive.output_base64sha256
+
+resource "aws_lambda_function" "name_function" {
+  filename         = "${path.module}/codes/zip/name.zip"
+  function_name    = "${var.RESOURCES_PREFIX}-name-${local.LAMBDA_VERSION}"
+  role             = var.NAME_FUNCTION_ROLE_ARN
+  handler          = "name.lambda_handler"
+  source_code_hash = data.archive_file.lambda_name_archive.output_base64sha256
   runtime          = var.LAMBDA_JAVASCRIPT_VERSION
   timeout          = 180
   memory_size      = 1024
@@ -94,39 +95,14 @@ resource "aws_lambda_function" "signup_function" {
 
 
 # =================================================================
-# Create a Lambda function for confirm signup
+# Create a Lambda function for email function
 # =========================================================================
-resource "aws_lambda_function" "confirm_signup_function" {
-  filename         = "${path.module}/codes/zip/confirm-signup.zip"
-  function_name    = "${var.RESOURCES_PREFIX}-confirm-signup-${local.LAMBDA_VERSION}"
-  role             = var.CONFIRM_SIGN_UP_FUNCTION_ROLE_ARN
-  handler          = "confirm-signup.lambda_handler"
-  source_code_hash = data.archive_file.lambda_confirm_signup_archive.output_base64sha256
-  runtime          = var.LAMBDA_JAVASCRIPT_VERSION
-  timeout          = 180
-  memory_size      = 1024
-
-  environment {
-    variables = {
-      ENV           = "${var.ENV}"
-      POOL_ID       = var.POOL_ID
-      CLIENT_ID     = var.CLIENT_ID
-      CLIENT_SECRET = var.CLIENT_SECRET
-      MONGODB_URI   = var.MONGODB_URI
-    }
-  }
-  layers = local.layers
-}
-
-# =================================================================
-# Create a Lambda function for confirm forgot password
-# =========================================================================
-resource "aws_lambda_function" "confirm_forgot_password_function" {
-  filename         = "${path.module}/codes/zip/confirm-forgot-password.zip"
-  function_name    = "${var.RESOURCES_PREFIX}-confirm-forgot-password-${local.LAMBDA_VERSION}"
-  role             = var.CONFIRM_SIGN_UP_FUNCTION_ROLE_ARN
-  handler          = "confirm-forgot-password.lambda_handler"
-  source_code_hash = data.archive_file.lambda_confirm_forgot_password_archive.output_base64sha256
+resource "aws_lambda_function" "email_function" {
+  filename         = "${path.module}/codes/zip/email.zip"
+  function_name    = "${var.RESOURCES_PREFIX}-email-${local.LAMBDA_VERSION}"
+  role             = var.EMAIL_FUNCTION_ROLE_ARN
+  handler          = "email.lambda_handler"
+  source_code_hash = data.archive_file.lambda_email_archive.output_base64sha256
   runtime          = var.LAMBDA_JAVASCRIPT_VERSION
   timeout          = 180
   memory_size      = 1024
@@ -144,15 +120,16 @@ resource "aws_lambda_function" "confirm_forgot_password_function" {
 }
 
 
+
 # =================================================================
-# Create a Lambda function for login
+# Create a Lambda function for role
 # =========================================================================
-resource "aws_lambda_function" "login_function" {
-  filename         = "${path.module}/codes/zip/login.zip"
-  function_name    = "${var.RESOURCES_PREFIX}-login-${local.LAMBDA_VERSION}"
-  role             = var.LOGIN_FUNCTION_ROLE_ARN
-  handler          = "login.lambda_handler"
-  source_code_hash = data.archive_file.lambda_login_archive.output_base64sha256
+resource "aws_lambda_function" "role_function" {
+  filename         = "${path.module}/codes/zip/role.zip"
+  function_name    = "${var.RESOURCES_PREFIX}-role-${local.LAMBDA_VERSION}"
+  role             = var.ROLE_FUNCTION_ROLE_ARN
+  handler          = "role.lambda_handler"
+  source_code_hash = data.archive_file.lambda_role_archive.output_base64sha256
   runtime          = var.LAMBDA_JAVASCRIPT_VERSION
   timeout          = 180
   memory_size      = 1024
@@ -170,15 +147,17 @@ resource "aws_lambda_function" "login_function" {
   layers = ["${aws_lambda_layer_version.javascript_layer.arn}", "${aws_lambda_layer_version.mongoose_layer.arn}"]
 }
 
+
+
 # =================================================================
-# Create a Lambda function for forgot_password
+# Create a Lambda function for mfa_setup
 # =========================================================================
-resource "aws_lambda_function" "forgot_password_function" {
-  filename         = "${path.module}/codes/zip/forgot_password.zip"
-  function_name    = "${var.RESOURCES_PREFIX}-forgot_password-${local.LAMBDA_VERSION}"
-  role             = var.FORGOT_PASSWORD_FUNCTION_ROLE_ARN
-  handler          = "forgot_password.lambda_handler"
-  source_code_hash = data.archive_file.lambda_forgot_password_archive.output_base64sha256
+resource "aws_lambda_function" "mfa_setup_function" {
+  filename         = "${path.module}/codes/zip/mfa_setup.zip"
+  function_name    = "${var.RESOURCES_PREFIX}-status-${local.LAMBDA_VERSION}"
+  role             = var.MFA_SETUP_FUNCTION_ROLE_ARN
+  handler          = "mfa_setup.lambda_handler"
+  source_code_hash = data.archive_file.lambda_mfa_setup_archive.output_base64sha256
   runtime          = var.LAMBDA_JAVASCRIPT_VERSION
   timeout          = 180
   memory_size      = 1024
@@ -195,5 +174,4 @@ resource "aws_lambda_function" "forgot_password_function" {
   }
   layers = local.layers
 }
-
 

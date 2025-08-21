@@ -7,7 +7,7 @@ variable "USER_TABLE_NAME" {
 
 }
 variable "MONGODB_URI" {
-  default = "put your uri here"
+  default = "mongodb+srv://abdulrauf:ninjaH2r@artisan-customer-api.uvgae37.mongodb.net/?retryWrites=true&w=majority&appName=Artisan-customer-ap"
 }
 variable "CLIENT_SECRET" {
 }
@@ -15,11 +15,10 @@ variable "CLIENT_ID" {
 }
 variable "POOL_ID" {
 }
-variable "FORGOT_PASSWORD_FUNCTION_ROLE_ARN" {}
-variable "SIGN_UP_FUNCTION_ROLE_ARN" {}
-variable "CONFIRM_SIGN_UP_FUNCTION_ROLE_ARN" {}
-variable "CONFIRM_FORGOT_PASSWORD_FUNCTION_ROLE_ARN" {
+variable "NAME_FUNCTION_ROLE_ARN" {}
+variable "EMAIL_FUNCTION_ROLE_ARN" {}
+variable "ROLE_FUNCTION_ROLE_ARN" {}
+variable "MFA_SETUP_FUNCTION_ROLE_ARN"  {
 
 }
 
-variable "LOGIN_FUNCTION_ROLE_ARN" {}

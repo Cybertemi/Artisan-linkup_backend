@@ -4,10 +4,10 @@ data "template_file" "swagger" {
     ACCOUNTID                                   = "${var.CURRENT_ACCOUNT_ID}"
     ENV                                         = "${var.ENV}"
     basePath                                    = "${var.BASE_PATH}"
-    LAMBDA_SIGN_UP_FUNCTION_ARN                 = "${var.LAMBDA_SIGN_UP_FUNCTION_ARN}"
-    LAMBDA_CONFIRM_SIGN_UP_FUNCTION_ARN         = var.LAMBDA_CONFIRM_SIGN_UP_FUNCTION_ARN
-    LAMBDA_CONFIRM_FORGOT_PASSWORD_FUNCTION_ARN = var.LAMBDA_CONFIRM_FORGOT_PASSWORD_FUNCTION_ARN
-    LAMBDA_LOGIN_FUNCTION_ARN                   = "${var.LAMBDA_LOGIN_FUNCTION_ARN}"
+    LAMBDA_NAME_FUNCTION_ARN                    = "${var.LAMBDA_NAME_FUNCTION_ARN}"
+    LAMBDA_EMAIL_FUNCTION_ARN                   = var.LAMBDA_EMAIL_FUNCTION_ARN
+    LAMBDA_ROLE_FUNCTION_ARN                    = var.LAMBDA_ROLE_FUNCTION_ARN
+    LAMBDA_MFA_SETUP_FUNCTION_ARN               = "${var.LAMBDA_MFA_SETUP_FUNCTION_ARN}"
 
   }
 }

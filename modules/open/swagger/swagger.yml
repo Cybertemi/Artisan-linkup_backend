@@ -38,7 +38,7 @@ paths:
                     application/json: '{"statusCode": 200}'
                 passthroughBehavior: 'when_no_match'
                 type: 'mock'
-    /v1/signup:
+    /v1/name:
         post:
             consumes:
                 - 'application/json'
@@ -54,7 +54,7 @@ paths:
                             type: 'string'
             x-amazon-apigateway-integration:
                 httpMethod: 'POST'
-                uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/${LAMBDA_SIGN_UP_FUNCTION_ARN}/invocations'
+                uri: 'arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/${LAMBDA_NAME_FUNCTION_ARN}/invocations'
                 responses:
                     default:
                         statusCode: '200'
@@ -114,7 +114,7 @@ paths:
                 passthroughBehavior: 'when_no_match'
                 type: 'mock'
 
-    /v1/confirm-signup:
+    /v1/email:
         post:
             consumes:
                 - 'application/json'
@@ -130,7 +130,7 @@ paths:
                             type: 'string'
             x-amazon-apigateway-integration:
                 httpMethod: 'POST'
-                uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/${LAMBDA_CONFIRM_SIGN_UP_FUNCTION_ARN}/invocations'
+                uri: 'arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/${LAMBDA_EMAIL_FUNCTION_ARN}/invocations'
                 responses:
                     default:
                         statusCode: '200'
@@ -190,7 +190,7 @@ paths:
                 passthroughBehavior: 'when_no_match'
                 type: 'mock'
 
-    /v1/confirm-forgot-password:
+    /v1/role:
         post:
             consumes:
                 - 'application/json'
@@ -206,7 +206,7 @@ paths:
                             type: 'string'
             x-amazon-apigateway-integration:
                 httpMethod: 'POST'
-                uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/${LAMBDA_CONFIRM_FORGOT_PASSWORD_FUNCTION_ARN}/invocations'
+                uri: 'arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/${LAMBDA_ROLE_FUNCTION_ARN}/invocations'
                 responses:
                     default:
                         statusCode: '200'
@@ -266,7 +266,7 @@ paths:
                 passthroughBehavior: 'when_no_match'
                 type: 'mock'
 
-    /v1/login:
+    /v1/mfa_setup:
         post:
             consumes:
                 - 'application/json'
@@ -282,7 +282,7 @@ paths:
                             type: 'string'
             x-amazon-apigateway-integration:
                 httpMethod: 'POST'
-                uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/${LAMBDA_LOGIN_FUNCTION_ARN}/invocations'
+                uri: 'arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/${LAMBDA_MFA_SETUP_FUNCTION_ARN}/invocations'
                 responses:
                     default:
                         statusCode: '200'

@@ -1,7 +1,7 @@
-resource "aws_iam_policy" "m4ace_lambda_policy" {
-  name        = "m4ace_lambda_policy"
+resource "aws_iam_policy" "artisan-linkup_lambda_policy" {
+  name        = "artisan-linkup_lambda_policy"
   path        = "/"
-  description = "m4ace_lambda_policy"
+  description = "artisan_linkup_lambda_policy"
 
   # Terraform's "jsonencode" function converts a
   # Terraform expression result to valid JSON syntax.
@@ -118,29 +118,26 @@ resource "aws_iam_policy" "m4ace_lambda_policy" {
 
 
 # ROLE POLICY ATTACHMENT
-resource "aws_iam_role_policy_attachment" "lambda_signup_function_attachment" {
-  role       = var.SIGN_UP_FUNCTION_ROLE_NAME
-  policy_arn = aws_iam_policy.m4ace_lambda_policy.arn
+resource "aws_iam_role_policy_attachment" "lambda_name_function_attachment" {
+  role       = var.NAME_FUNCTION_ROLE_NAME
+  policy_arn = aws_iam_policy.artisan-linkup_lambda_policy.arn
 }
 
 
 # ROLE POLICY ATTACHMENT
-resource "aws_iam_role_policy_attachment" "lambda_forgot_password_function_attachment" {
-  role       = var.FORGOT_PASSWORD_FUNCTION_ROLE_NAME
-  policy_arn = aws_iam_policy.m4ace_lambda_policy.arn
+resource "aws_iam_role_policy_attachment" "lambda_email_function_attachment" {
+  role       = var.EMAIL_FUNCTION_ROLE_NAME
+  policy_arn = aws_iam_policy.artisan-linkup_lambda_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_confirm_signup_function_attachment" {
-  role       = var.CONFIRM_SIGN_UP_FUNCTION_ROLE_NAME
-  policy_arn = aws_iam_policy.m4ace_lambda_policy.arn
+resource "aws_iam_role_policy_attachment" "lambda_role_function_attachment" {
+  role       = var.ROLE_FUNCTION_ROLE_NAME
+  policy_arn = aws_iam_policy.artisan-linkup_lambda_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_confirm_forgot_password_function_attachment" {
-  role       = var.CONFIRM_FORGOT_PASSWORD_FUNCTION_ROLE_NAME
-  policy_arn = aws_iam_policy.m4ace_lambda_policy.arn
+resource "aws_iam_role_policy_attachment" "lambda_mfa_setup_function_attachment" {
+  role       = var.MFA_SETUP_FUNCTION_ROLE_NAME
+  policy_arn = aws_iam_policy.artisan-linkup_lambda_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_login_function_attachment" {
-  role       = var.LOGIN_FUNCTION_ROLE_NAME
-  policy_arn = aws_iam_policy.m4ace_lambda_policy.arn
-}
+

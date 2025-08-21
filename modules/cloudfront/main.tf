@@ -1,4 +1,4 @@
-resource "aws_cloudfront_origin_access_control" "cloudfront" {
+ resource "aws_cloudfront_origin_access_control" "cloudfront" {
   name                              = "cloud-front"
   description                       = "Cloud Front S3 OAC"
   origin_access_control_origin_type = "s3"
@@ -84,7 +84,7 @@ resource "aws_cloudfront_distribution" "s3_noughttrapper_pdf_storage" {
   }
   tags = {
     Environment = "production"
-    Name        = "Frontend App"
+    Name        = "Backend App"
   }
 }
 
