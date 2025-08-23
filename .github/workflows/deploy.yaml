@@ -41,14 +41,8 @@ jobs:
             #       chmod +x tfsec
             #       mv tfsec /usr/local/bin/
             #       tfsec --version
-            - name: format Terraform files
-              id: fmt_recursive
-              run: terraform fmt -recursive
-            - name: Terraform format
-              id: fmt
-              run: terraform fmt -check
-              
-               #  Add AWS credentials setup here
+            
+              #  Add AWS credentials setup here
             - name: Configure AWS Credentials
               uses: aws-actions/configure-aws-credentials@v4
               with:
@@ -56,9 +50,21 @@ jobs:
                 aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                 aws-region: us-east-1
 
+            - name: Verify AWS Identity
+              run: aws sts get-caller-identity
+              
+            - name: format Terraform files
+              id: fmt_recursive
+              run: terraform fmt -recursive
+              
+            - name: Terraform format
+              id: fmt
+              run: terraform fmt -check
+
             - name: Terraform Init
               id: init
               run: terraform init
+              
 
             - name: Terraform Validate
               id: validate
