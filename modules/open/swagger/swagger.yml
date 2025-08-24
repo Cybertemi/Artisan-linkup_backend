@@ -54,7 +54,7 @@ paths:
                             type: 'string'
             x-amazon-apigateway-integration:
                 httpMethod: 'POST'
-                uri: 'arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/${LAMBDA_NAME_FUNCTION_ARN}/invocations'
+                uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/${LAMBDA_NAME_FUNCTION_ARN}/invocations'
                 responses:
                     default:
                         statusCode: '200'
@@ -130,7 +130,7 @@ paths:
                             type: 'string'
             x-amazon-apigateway-integration:
                 httpMethod: 'POST'
-                uri: 'arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/${LAMBDA_EMAIL_FUNCTION_ARN}/invocations'
+                uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/${LAMBDA_EMAIL_FUNCTION_ARN}/invocations'
                 responses:
                     default:
                         statusCode: '200'
@@ -206,7 +206,7 @@ paths:
                             type: 'string'
             x-amazon-apigateway-integration:
                 httpMethod: 'POST'
-                uri: 'arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/${LAMBDA_ROLE_FUNCTION_ARN}/invocations'
+                uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/${LAMBDA_ROLE_FUNCTION_ARN}/invocations'
                 responses:
                     default:
                         statusCode: '200'
@@ -282,7 +282,7 @@ paths:
                             type: 'string'
             x-amazon-apigateway-integration:
                 httpMethod: 'POST'
-                uri: 'arn:aws:apigateway:eu-north-1:lambda:path/2015-03-31/functions/${LAMBDA_MFA_SETUP_FUNCTION_ARN}/invocations'
+                uri: 'arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/${LAMBDA_MFA_SETUP_FUNCTION_ARN}/invocations'
                 responses:
                     default:
                         statusCode: '200'

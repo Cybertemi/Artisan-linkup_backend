@@ -9,7 +9,7 @@ variable "ENV" {
 
 variable "TF_STATE_BUCKET" {
   type    = string
-  default = "m4ace-tf-state-bucket"
+  default = "artisan-linkup-tf-state-bucket"
 }
 
 # variable "CI_CD_BUCKET" {
@@ -19,7 +19,7 @@ variable "TF_STATE_BUCKET" {
 
 variable "m4ace-Terraform-Lock" {
   type    = string
-  default = "m4ace-Lock-TF"
+  default = "artisan-linkup-Lock-TF"
 }
 
 variable "LAMBDA_PYTHON_VERSION" {

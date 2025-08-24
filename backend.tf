@@ -1,4 +1,15 @@
+#Statefile creation 
+ terraform {
+     backend "s3" {
+         encrypt = true
+          bucket = "artisan-linkup-backend-us-east-1"
+          key = "dev/terraform.tfstate"
+          region = "us-east-1"
 
+          dynamodb_table = "testworklock-us-east-1"
+     }
+
+ }
 # resource "aws_s3_bucket" "terraform_state" {
 #   bucket = "noughttrapper-tf-state-bucket"
 #   # Prevent accidental deletion of this S3 bucket

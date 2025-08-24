@@ -143,7 +143,7 @@ resource "aws_iam_policy" "sms_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action   = ["sns:*"]
+        Action   = ["sns:Publish"]
         Effect   = "Allow"
         Resource = "*"
       }
@@ -171,7 +171,7 @@ resource "aws_iam_role" "cognito_sms_role" {
 
 
 resource "aws_iam_role_policy_attachment" "policy_role_attachment" {
-  role       = aws_iam_role.cognito_sms_role.id
+  role       = aws_iam_role.cognito_sms_role.name
   policy_arn = aws_iam_policy.sms_policy.arn
 }
 resource "aws_cognito_identity_pool" "main" {

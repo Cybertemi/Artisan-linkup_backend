@@ -26,6 +26,38 @@ resource "aws_s3_bucket_public_access_block" "artisan-linkup-public_access" {
 }
 
 # resource "aws_s3_bucket_policy" "bucket_policy" {
+#   bucket = aws_s3_bucket.artisan_linkup.id
+
+#   policy = jsonencode({
+#     Version = "2012-10-17",
+#     Statement = [
+#       {
+#         Sid = "AllowTerraformRoleAccessToObjects",
+#         Effect = "Allow",
+#         Principal = {
+#           AWS = "arn:aws:iam::<ACCOUNT_ID>:role/<TerraformRoleName>"
+#         },
+#         Action = [
+#           "s3:GetObject",
+#           "s3:PutObject",
+#           "s3:DeleteObject"
+#         ],
+#         Resource = "arn:aws:s3:::${var.bucket_name}/dev/*"
+#       },
+#       {
+#         Sid = "AllowTerraformRoleListBucket",
+#         Effect = "Allow",
+#         Principal = {
+#           AWS = "arn:aws:iam::<ACCOUNT_ID>:role/<TerraformRoleName>"
+#         },
+#         Action = "s3:ListBucket",
+#         Resource = "arn:aws:s3:::${var.bucket_name}"
+#       }
+#     ]
+#   })
+# }
+
+# resource "aws_s3_bucket_policy" "bucket_policy" {
 #   bucket = aws_s3_bucket.artisan-linkup.id
 #   policy = jsonencode({
 #     "Version" : "2012-10-17",

@@ -7,7 +7,7 @@ variable "USER_TABLE_NAME" {
 
 }
 variable "MONGODB_URI" {
-  default = "mongodb+srv://abdulrauf:ninjaH2r@artisan-customer-api.uvgae37.mongodb.net/?retryWrites=true&w=majority&appName=Artisan-customer-ap"
+  default = "MONGODB_URI"
 }
 variable "CLIENT_SECRET" {
 }
